@@ -1,419 +1,116 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
-
   <meta charset="UTF-8">
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Git Automation</title>
-
   <script src=https://code.jquery.com/jquery-3.6.4.min.js></script>
-
   <style>
-
     #app-container {
-
       padding-left: 20px;
-
     }
 
     .input-container {
-
       margin-bottom: 10px;
-
     }
 
     .result-container {
-
       margin-top: 20px;
-
-      display: none; /* Başlangıçta gizli */
-
+      display: none;
     }
 
     .result-item {
-
       margin-bottom: 10px;
-
       display: flex;
-
       align-items: center;
-
     }
 
     .copy-icon {
-
       height: 16px;
-
       width: 14px;
-
       margin-right: 5px;
-
     }
 
-                .input {
+    .input {
+      padding-bottom: 5px;
+    }
 
-                  padding-bottom: 5px;
-
-                }
-
-                .copy-button {
-
-                margin-left: 10px;
-
+    .copy-button {
+      margin-left: 10px;
       cursor: pointer;
-
       color: #fff;
-
       border: none;
-
       padding: 4px 5px;
+      border-radius: 5px;
+    }
 
-      border-radius: 5px;   
-
-                }             
-
-                svg {
-
+    svg {
       height: 13px !important;
-
       width: 13px !important;
-
     }
 
     .warning {
-
       color: #e74c3c;
-
       font-weight: bold;
-
       margin-left: 5px;
-
     }
 
-                body {
-
+    body {
       margin: 0;
-
       padding: 0;
-
     }
-
- 
 
     #footer {
-
       position: fixed;
-
       bottom: 0;
-
       width: 100%;
-
       background-color: #f1f1f1;
-
       text-align: center;
-
       padding: 10px;
-
     }
-
   </style>
-
 </head>
 
 <body>
-
- 
-
- 
-
   <div id="app-container">
-
- 
-
     <h1>Git Automation</h1>
-
-   
-
     <div class="input-container">
-
-      <div class="input">
-
-        <label for="branchType">Branch Type:</label>
-
-        <select id="branchType">
-
+      <div class="input"> <label for="branchType">Branch Type:</label> <select id="branchType">
           <option value="feat">Feature (feat)</option>
-
           <option value="bugfix">Bugfix (bugfix)</option>
-
           <option value="hotfix">Hotfix (hotfix)</option>
-
-        </select>
-
-      </div>
-
- 
-
-      <div class="input">
-
-        <label for="issueNumber">Issue Number:</label>
-
-        <input type="text" id="issueNumber" placeholder="Enter issue number">
-
-      </div>
-
-                 
-
-                  <div class="input">
-
-        <label for="branchNameOptional">Branch Name (Optional):</label>
-
-        <input type="text" id="branchNameOptional" placeholder="Enter optional branch name">
-
-      </div>
-
- 
-
-      <div class="input">
-
-        <label for="commitMessage">Commit Message:</label>
-
-        <input type="text" id="commitMessage" placeholder="Enter commit message">
-
-      </div>
-
- 
-
-      <div>
-
-        <button id="generateBtn">Generate</button>
-
-      </div>
-
+        </select> </div>
+      <div class="input"> <label for="issueNumber">Issue Number:</label> <input type="text" id="issueNumber"
+          placeholder="Enter issue number"> </div>
+      <div class="input"> <label for="branchNameOptional">Branch Name (Optional):</label> <input type="text"
+          id="branchNameOptional" placeholder="Enter optional branch name"> </div>
+      <div class="input"> <label for="commitMessage">Commit Message:</label> <input type="text" id="commitMessage"
+          placeholder="Enter commit message"> </div>
+      <div> <button id="generateBtn">Generate</button> </div>
     </div>
-
- 
-
     <div class="result-container" id="resultContainer">
-
-      <div class="result-item" id="branchName">
-
-        <strong>Branch Name:</strong>
-
-        <span id="branchNameText"></span>
-
-        <button class="copy-button" id="copyBranchName"><svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 448 512"><path d="M208 0H332.1c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9V336c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V48c0-26.5 21.5-48 48-48zM48 128h80v64H64V448H256V416h64v48c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V176c0-26.5 21.5-48 48-48z"/></svg></button>
-
-        <span class="warning" id="branchWarning"></span>
-
-      </div>
-
-      <div class="result-item" id="commitMessageResult">
-
-        <strong>Commit Message:</strong>
-
-        <span id="commitMessageText"></span>
-
-        <button class="copy-button" id="copyCommitMessage"><svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 448 512"><path d="M208 0H332.1c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9V336c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V48c0-26.5 21.5-48 48-48zM48 128h80v64H64V448H256V416h64v48c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V176c0-26.5 21.5-48 48-48z"/></svg></button>
-
-      </div>
-
-      <div class="result-item" id="prMessage">
-
-        <strong>PR Message:</strong>
-
-        <span id="prMessageText"></span>
-
-        <button class="copy-button" id="copyPrMessage"><svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 448 512"><path d="M208 0H332.1c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9V336c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V48c0-26.5 21.5-48 48-48zM48 128h80v64H64V448H256V416h64v48c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V176c0-26.5 21.5-48 48-48z"/></svg></button>
-
-      </div>
-
+      <div class="result-item" id="branchName"> <strong>Branch Name:</strong> <span id="branchNameText"></span> <button
+          class="copy-button" id="copyBranchName"><svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 448 512">
+            <path
+              d="M208 0H332.1c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9V336c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V48c0-26.5 21.5-48 48-48zM48 128h80v64H64V448H256V416h64v48c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V176c0-26.5 21.5-48 48-48z" />
+          </svg></button> <span class="warning" id="branchWarning"></span> </div>
+      <div class="result-item" id="commitMessageResult"> <strong>Commit Message:</strong> <span
+          id="commitMessageText"></span> <button class="copy-button" id="copyCommitMessage"><svg
+            xmlns=http://www.w3.org/2000/svg viewBox="0 0 448 512">
+            <path
+              d="M208 0H332.1c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9V336c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V48c0-26.5 21.5-48 48-48zM48 128h80v64H64V448H256V416h64v48c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V176c0-26.5 21.5-48 48-48z" />
+          </svg></button> </div>
+      <div class="result-item" id="prMessage"> <strong>PR Message:</strong> <span id="prMessageText"></span> <button
+          class="copy-button" id="copyPrMessage"><svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 448 512">
+            <path
+              d="M208 0H332.1c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9V336c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V48c0-26.5 21.5-48 48-48zM48 128h80v64H64V448H256V416h64v48c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V176c0-26.5 21.5-48 48-48z" />
+          </svg></button> </div>
     </div>
-
   </div>
-
- 
-
-<div id="footer">
-
-  Geliştirme talepleri veya hata bildirimi için → <a href="mailto:umitbeniz@araskargo.com.tr">umitbeniz@araskargo.com.tr</a>
-
-</div>
-
-  <script>
-
-    $(document).ready(function(){
-
-      $("#generateBtn").click(function(){
-
-        var commitMessage = $("#commitMessage").val();
-
-                               if (!commitMessage) {
-
-                                 alert("Commit Message is required!");
-
-                                 return;
-
-                               }
-
- 
-
-        var branchType = $("#branchType").val();
-
-        var issueNumber = $("#issueNumber").val();
-
-        var branchNameOptional = $("#branchNameOptional").val();
-
-                              
-
-                               if (!issueNumber && !branchNameOptional) {
-
-                                 alert("Either Issue Number or Branch Name is required!");
-
-                                 return;
-
-                               }
-
-                              
-
-                               var formattedBranchNameOptional = "xxxxxxx";
-
- 
-
-                               if (branchNameOptional) {
-
-                                 formattedBranchNameOptional = branchNameOptional.toLowerCase().replace(/\s+/g, '-');
-
-                               }
-
- 
-
-                               var branchName = (issueNumber ? branchType + '/iss-' + issueNumber + '-': branchType + '/') + formattedBranchNameOptional;
-
- 
-
-        var commitMsgPrefix = (issueNumber ? 'aras-digital/nesy-analysis#' + issueNumber : branchType.toUpperCase());
-
-                               var commitMessageFull = commitMsgPrefix + ' | ' + commitMessage;
-
- 
-
-        var prMsgPrefix = "";
-
-                               if (!issueNumber) {
-
-                                 if (branchType === 'feat') {
-
-                                               prMsgPrefix = branchType.toUpperCase() + ' SYNC TO DEV | PR';
-
-                                 } else if (branchType === 'bugfix') {
-
-                                               prMsgPrefix = branchType.toUpperCase() + ' SYNC TO TEST | PR';
-
-                                 } else if (branchType === 'hotfix') {
-
-                                               prMsgPrefix = branchType.toUpperCase() + ' SYNC TO HR | PR';
-
-                                 }
-
-                               } else {
-
-                                 prMsgPrefix = (branchType === 'feat') ? 'ISS #' + issueNumber + ' | PR' : (branchType === 'bugfix') ? 'BUGFIX SYNC TO TEST | PR' : 'HOTFIX SYNC TO HR | PR';
-
-                               }
-
-                               var prMessage = prMsgPrefix;
-
- 
-
-        var warningMessage = "";
-
-        if (branchType === 'bugfix') {
-
-          warningMessage = "Dikkat! Bu branch <b>rel/env-test</b> branchinden oluşturulmalıdır";
-
-        } else if (branchType === 'hotfix') {
-
-          warningMessage = "Dikkat! Bu branch <b>rel/env-hr</b> branchinden oluşturulmalıdır";
-
-        }
-
- 
-
-        $("#branchWarning").html(warningMessage ? '(' + warningMessage + ')' : '');
-
- 
-
-        $("#branchNameText").text(branchName);
-
-        $("#commitMessageText").text(commitMessageFull);
-
-        $("#prMessageText").text(prMessage);
-
- 
-
-        $("#resultContainer").show();
-
-      });
-
- 
-
-      $("#copyBranchName").click(function(){
-
-        copyToClipboard($("#branchNameText").text());
-
-        alert("Branch Name kopyalandı!");
-
-      });
-
- 
-
-      $("#copyCommitMessage").click(function(){
-
-        copyToClipboard($("#commitMessageText").text());
-
-        alert("Commit Message kopyalandı!");
-
-      });
-
- 
-
-      $("#copyPrMessage").click(function(){
-
-        copyToClipboard($("#prMessageText").text());
-
-        alert("PR Message kopyalandı!");
-
-      });
-
- 
-
-      function copyToClipboard(text) {
-
-        var dummy = document.createElement("textarea");
-
-        document.body.appendChild(dummy);
-
-        dummy.value = text;
-
-        dummy.select();
-
-        document.execCommand("copy");
-
-        document.body.removeChild(dummy);
-
-      }
-
-    });
-
-  </script>
-
- 
-
+  <div id="footer"> Geliştirme talepleri veya hata bildirimi için → <a
+      href="mailto:umitbeniz@araskargo.com.tr">umitbeniz@araskargo.com.tr</a> </div>
+  <script>    $(document).ready(function () { $("#generateBtn").click(function () { var commitMessage = $("#commitMessage").val(); if (!commitMessage) { alert("Commit Message is required!"); return; } var branchType = $("#branchType").val(); var issueNumber = $("#issueNumber").val(); var branchNameOptional = $("#branchNameOptional").val(); if (!issueNumber && !branchNameOptional) { alert("Either Issue Number or Branch Name is required!"); return; } var formattedBranchNameOptional = "xxxxxxx"; if (branchNameOptional) { formattedBranchNameOptional = branchNameOptional.toLowerCase().replace(/\s+/g, '-'); } var branchName = (issueNumber ? branchType + '/iss-' + issueNumber + '-' : branchType + '/') + formattedBranchNameOptional; var commitMsgPrefix = (issueNumber ? 'aras-digital/nesy-analysis#' + issueNumber : branchType.toUpperCase()); var commitMessageFull = commitMsgPrefix + ' | ' + commitMessage; var prMsgPrefix = ""; if (!issueNumber) { if (branchType === 'feat') { prMsgPrefix = branchType.toUpperCase() + ' SYNC TO DEV | PR'; } else if (branchType === 'bugfix') { prMsgPrefix = branchType.toUpperCase() + ' SYNC TO TEST | PR'; } else if (branchType === 'hotfix') { prMsgPrefix = branchType.toUpperCase() + ' SYNC TO HR | PR'; } } else { prMsgPrefix = (branchType === 'feat') ? 'ISS #' + issueNumber + ' | PR' : (branchType === 'bugfix') ? 'BUGFIX SYNC TO TEST | PR' : 'HOTFIX SYNC TO HR | PR'; } var prMessage = prMsgPrefix; var warningMessage = ""; if (branchType === 'bugfix') { warningMessage = "Dikkat! Bu branch <b>rel/env-test</b> branchinden oluşturulmalıdır"; } else if (branchType === 'hotfix') { warningMessage = "Dikkat! Bu branch <b>rel/env-hr</b> branchinden oluşturulmalıdır"; } $("#branchWarning").html(warningMessage ? '(' + warningMessage + ')' : ''); $("#branchNameText").text(branchName); $("#commitMessageText").text(commitMessageFull); $("#prMessageText").text(prMessage); $("#resultContainer").show(); }); $("#copyBranchName").click(function () { copyToClipboard($("#branchNameText").text()); alert("Branch Name kopyalandı!"); }); $("#copyCommitMessage").click(function () { copyToClipboard($("#commitMessageText").text()); alert("Commit Message kopyalandı!"); }); $("#copyPrMessage").click(function () { copyToClipboard($("#prMessageText").text()); alert("PR Message kopyalandı!"); }); function copyToClipboard(text) { var dummy = document.createElement("textarea"); document.body.appendChild(dummy); dummy.value = text; dummy.select(); document.execCommand("copy"); document.body.removeChild(dummy); } });  </script>
 </body>
 
 </html>
