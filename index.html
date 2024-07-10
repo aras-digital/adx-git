@@ -45,6 +45,7 @@
       margin-right: 20px;
     }
   </style>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 
 <body>
@@ -55,9 +56,9 @@
       <label for="branchType" class="col-sm-2 col-form-label">Branch Type:</label>
       <div class="col-sm-4">
         <select class="form-control" id="branchType">
-          <option class="dropdown-item" value="feat">Feature (feat)</option>
-          <option class="dropdown-item" value="bugfix">Bugfix (bugfix)</option>
-          <option class="dropdown-item" value="hotfix">Hotfix (hotfix)</option>
+          <option class="dropdown-item" value="feat">Feature (feat) for rel/env-dev</option>
+          <option class="dropdown-item" value="bugfix">Bugfix (bugfix) for rel/env-test</option>
+          <option class="dropdown-item" value="hotfix">Hotfix (hotfix) for rel/env-{COUNTRY_CODE}</option>
         </select>
       </div>
     </div>
@@ -136,8 +137,24 @@
   <div id="footer">
     <span>Geliştirme talepleri veya hata bildirimi için → <a
         href="mailto:umitbeniz@araskargo.com.tr">umitbeniz@araskargo.com.tr</a></span>
-    <span id="version">v1.1.1</span>
+    <span id="version">v1.1.2</span>
   </div>
-  <script>$(document).ready(function () { $("#generateBtn").click(function () { var commitMessage = $("#commitMessage").val(); if (!commitMessage) { alert("Commit Message is required!"); return; } var branchType = $("#branchType").val(); var issueNumber = $("#issueNumber").val(); var branchNameOptional = $("#branchNameOptional").val().trim(); if (!issueNumber && !branchNameOptional) { alert("Either Issue Number or Branch Name is required!"); return; } var formattedBranchNameOptional = "xxxxxxx"; if (branchNameOptional) { formattedBranchNameOptional = branchNameOptional.toLowerCase().replace(/\s+/g, '-'); } var branchName; if ($("#isBffGateway").is(":checked")) { branchName = branchType + '/bff-iss-' + (issueNumber ? issueNumber + '-' : '') + formattedBranchNameOptional; } else { branchName = branchType + '/iss-' + (issueNumber ? issueNumber + '-' : '') + formattedBranchNameOptional; } if (issueNumber) { if ($("#isBffGateway").is(":checked")) { commitMsgPrefix = 'aras-digital/nesy-customer-bff-gateway#' + issueNumber; } else { commitMsgPrefix = 'aras-digital/nesy-analysis#' + issueNumber; } } else { var commitMsgPrefix = ($("#isBffGateway").is(":checked")) ? 'BFF-' + branchType.toUpperCase() : branchType.toUpperCase(); } var commitMessageFull = commitMsgPrefix + ' | ' + commitMessage; var prMsgPrefix = ""; if (!issueNumber) { prMsgPrefix = branchType.toUpperCase() + ' | PR'; } else { prMsgPrefix = (branchType === 'feat') ? 'ISS #' + issueNumber + ' | PR' : (branchType === 'bugfix') ? 'BUGFIX #' + issueNumber + ' | PR' : 'HOTFIX #' + issueNumber + ' | PR'; } if ($("#isBffGateway").is(":checked")) { prMsgPrefix = 'BFF-' + prMsgPrefix; } var prMessage = prMsgPrefix; var warningMessage = ""; if (branchType === 'bugfix') { warningMessage = "Dikkat! Bu branch <b>rel/env-test</b> branchinden oluşturulmalıdır"; } else if (branchType === 'hotfix') { warningMessage = "Dikkat! Bu branch <b>rel/env-hr</b> branchinden oluşturulmalıdır"; } $("#branchWarning").html(warningMessage ? '(' + warningMessage + ')' : ''); $("#branchNameText").text(branchName); $("#commitMessageText").text(commitMessageFull); $("#prMessageText").text(prMessage); $("#result-container").show(); }); $("#copyBranchName").click(function () { copyToClipboard($("#branchNameText").text()); alert("Branch Name kopyalandı!"); }); $("#copyCommitMessage").click(function () { copyToClipboard($("#commitMessageText").text()); alert("Commit Message kopyalandı!"); }); $("#copyPrMessage").click(function () { copyToClipboard($("#prMessageText").text()); alert("PR Message kopyalandı!"); }); function copyToClipboard(text) { var dummy = document.createElement("textarea"); document.body.appendChild(dummy); dummy.value = text; dummy.select(); document.execCommand("copy"); document.body.removeChild(dummy); } });  </script>
+  <script>$(document).ready(function () { $("#generateBtn").click(function () { var commitMessage = $("#commitMessage").val(); if (!commitMessage) { showToast("Commit Message is required!"); return; } var branchType = $("#branchType").val(); var issueNumber = $("#issueNumber").val(); var branchNameOptional = $("#branchNameOptional").val().trim(); if (!issueNumber && !branchNameOptional) { showToast("Either Issue Number or Branch Name is required!"); return; } var formattedBranchNameOptional = "xxxxxxx"; if (branchNameOptional) { formattedBranchNameOptional = branchNameOptional.toLowerCase().replace(/\s+/g, '-'); } var branchName; if ($("#isBffGateway").is(":checked")) { branchName = branchType + '/bff-iss-' + (issueNumber ? issueNumber + '-' : '') + formattedBranchNameOptional; } else { branchName = branchType + '/iss-' + (issueNumber ? issueNumber + '-' : '') + formattedBranchNameOptional; } if (issueNumber) { if ($("#isBffGateway").is(":checked")) { commitMsgPrefix = 'aras-digital/nesy-customer-bff-gateway#' + issueNumber; } else { commitMsgPrefix = 'aras-digital/nesy-analysis#' + issueNumber; } } else { var commitMsgPrefix = ($("#isBffGateway").is(":checked")) ? 'BFF-' + branchType.toUpperCase() : branchType.toUpperCase(); } var commitMessageFull = commitMsgPrefix + ' | ' + commitMessage; var prMsgPrefix = ""; if (!issueNumber) { prMsgPrefix = branchType.toUpperCase() + ' | PR'; } else { prMsgPrefix = (branchType === 'feat') ? 'ISS #' + issueNumber + ' | PR' : (branchType === 'bugfix') ? 'BUGFIX #' + issueNumber + ' | PR' : 'HOTFIX #' + issueNumber + ' | PR'; } if ($("#isBffGateway").is(":checked")) { prMsgPrefix = 'BFF-' + prMsgPrefix; } var prMessage = prMsgPrefix; var warningMessage = ""; if (branchType === 'bugfix') { warningMessage = "Dikkat! Bu branch <b>rel/env-test</b> branchinden oluşturulmalıdır"; } else if (branchType === 'hotfix') { warningMessage = "Dikkat! Bu branch <b>rel/env-hr</b> branchinden oluşturulmalıdır"; } $("#branchWarning").html(warningMessage ? '(' + warningMessage + ')' : ''); $("#branchNameText").text(branchName); $("#commitMessageText").text(commitMessageFull); $("#prMessageText").text(prMessage); $("#result-container").show(); }); $("#copyBranchName").click(function () { copyToClipboard($("#branchNameText").text()); showToast("Branch Name kopyalandı!"); }); $("#copyCommitMessage").click(function () { copyToClipboard($("#commitMessageText").text()); showToast("Commit Message kopyalandı!"); }); $("#copyPrMessage").click(function () { copyToClipboard($("#prMessageText").text()); showToast("PR Message kopyalandı!"); }); function copyToClipboard(text) { var dummy = document.createElement("textarea"); document.body.appendChild(dummy); dummy.value = text; dummy.select(); document.execCommand("copy"); document.body.removeChild(dummy); } });  </script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script type="text/javascript">
+    function showToast(message) {
+        Toastify({
+            text: message,
+            duration: 3000,
+            gravity: "bottom",
+            position: "left",
+            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+            close: true,
+            style: {
+              margin: "0px 0px 3% 10px",
+          }
+        }).showToast();
+    }
+</script>
 </body>
 </html>
