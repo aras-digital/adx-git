@@ -8,43 +8,7 @@
   <script src=https://code.jquery.com/jquery-3.6.4.min.js></script>
   <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
-  <style>
-    #result-container {
-      display: none;
-    }
-
-    .copy-button {
-      cursor: pointer;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-    }
-
-    svg {
-      height: 13px !important;
-      width: 13px !important;
-    }
-
-    .warning {
-      color: #e74c3c;
-      font-weight: bold;
-      margin-left: 5px;
-    }
-
-    #footer {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background-color: #f1f1f1;
-      text-align: center;
-      padding: 10px;
-    }
-
-    #version {
-      float: right;
-      margin-right: 20px;
-    }
-  </style>
+    <style>#result-container{display: none}.copy-button{cursor: pointer;color: #fff;border: none;border-radius: 5px}svg{height: 13px !important;width: 13px !important}.warning{color: #e74c3c;font-weight: bold;margin-left: 5px}#footer{position: fixed;bottom: 0;width: 100%;background-color: #f1f1f1;text-align: center;padding: 10px}#version{float: right;margin-right: 20px}.custom-radio{appearance: none;-webkit-appearance: none;width: 20px;height: 20px;background-color: #fff;border: 2px solid #007bff;border-radius: 4px;cursor: pointer;position: relative}.form-check-label:hover{cursor: pointer}.custom-radio:checked{background-color: #007bff;border-color: #007bff}.custom-radio:checked::before{content: '';position: absolute;top: 2px;left: 5px;width: 6px;height: 10px;border: solid white;border-width: 0 2px 2px 0;transform: rotate(45deg)}</style>
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 
@@ -53,19 +17,19 @@
   <div class="container-fluid p-4">
     <h1>Git Automation </h1>
     <div class="form-group row mt-4">
-      <label for="branchType" class="col-sm-2 col-form-label">Branch Type:</label>
+      <label for="branchType" class="col-sm-2 col-form-label">PR will merge to?</label>
       <div class="col-sm-4">
         <select class="form-control" id="branchType">
-          <option class="dropdown-item" value="feat">Feature (feat) for rel/env-dev</option>
-          <option class="dropdown-item" value="bugfix">Bugfix (bugfix) for rel/env-test</option>
-          <option class="dropdown-item" value="hotfix">Hotfix (hotfix) for rel/env-{COUNTRY_CODE}</option>
+          <option class="dropdown-item" value="feat">rel/env-dev</option>
+          <option class="dropdown-item" value="bugfix">rel/env-test</option>
+          <option class="dropdown-item" value="hotfix">rel/env-{COUNTRY_CODE}</option>
         </select>
       </div>
     </div>
     <div class="form-group row">
       <label for="issueNumber" class="col-sm-2 col-form-label">Issue Number:</label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" id="issueNumber" placeholder="Enter issue number">
+        <input type="number" class="form-control" id="issueNumber" placeholder="Enter issue number">
       </div>
     </div>
     <div class="form-group row">
@@ -81,11 +45,23 @@
       </div>
     </div>
     <div class="form-group row">
-      <label for="isBffGatewayProject" class="col-sm-2 col-form-label">Is Project ?</label>
+      <label class="col-sm-2 col-form-label">Issue Repository is?</label>
       <div class="col-sm-4">
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="checkbox" id="isBffGateway" value="isBffGateway">
+        <div class="form-check">
+          <input class="form-check-input custom-radio" checked="true" type="radio" id="isNesyAnalysis" name="projectType" value="isNesyAnalysis">
+          <label class="form-check-label" for="isNesyAnalysis">nesy-analysis</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input custom-radio" type="radio" id="isBffGateway" name="projectType" value="isBffGateway">
           <label class="form-check-label" for="isBffGateway">nesy-customer-bff-gateway</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input custom-radio" type="radio" id="isParcelshopApi" name="projectType" value="isParcelshopApi">
+          <label class="form-check-label" for="isParcelshopApi">nesy-parcelshop-api</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input custom-radio" type="radio" id="isParcelshopPwa" name="projectType" value="isParcelshopPwa">
+          <label class="form-check-label" for="isParcelshopPwa">nesy-parcelshop-pwa</label>
         </div>
       </div>
     </div>
@@ -139,7 +115,7 @@
         href="mailto:umitbeniz@araskargo.com.tr">umitbeniz@araskargo.com.tr</a></span>
     <span id="version">v1.1.3</span>
   </div>
-  <script>$(document).ready(function () { $("#generateBtn").click(function () { var commitMessage = $("#commitMessage").val(); if (!commitMessage) { showToast("Commit Message is required!"); return; } var branchType = $("#branchType").val(); var issueNumber = $("#issueNumber").val(); var branchNameOptional = $("#branchNameOptional").val().trim(); if (!issueNumber && !branchNameOptional) { showToast("Either Issue Number or Branch Name is required!"); return; } var formattedBranchNameOptional = "xxxxxxx"; if (branchNameOptional) { formattedBranchNameOptional = branchNameOptional.toLowerCase().replace(/\s+/g, '-'); } var branchName; if ($("#isBffGateway").is(":checked")) { branchName = branchType + '/bff-iss-' + (issueNumber ? issueNumber + '-' : '') + formattedBranchNameOptional; } else { branchName = branchType + '/iss-' + (issueNumber ? issueNumber + '-' : '') + formattedBranchNameOptional; } if (issueNumber) { if ($("#isBffGateway").is(":checked")) { commitMsgPrefix = 'aras-digital/nesy-customer-bff-gateway#' + issueNumber; } else { commitMsgPrefix = 'aras-digital/nesy-analysis#' + issueNumber; } } else { var commitMsgPrefix = ($("#isBffGateway").is(":checked")) ? 'BFF-' + branchType.toUpperCase() : branchType.toUpperCase(); } var commitMessageFull = commitMsgPrefix + ' | ' + commitMessage; var prMsgPrefix = ""; if (!issueNumber) { prMsgPrefix = branchType.toUpperCase() + ' | PR'; } else { prMsgPrefix = (branchType === 'feat') ? 'ISS #' + issueNumber + ' | PR' : (branchType === 'bugfix') ? 'BUGFIX #' + issueNumber + ' | PR' : 'HOTFIX #' + issueNumber + ' | PR'; } if ($("#isBffGateway").is(":checked")) { prMsgPrefix = 'BFF-' + prMsgPrefix; } var prMessage = prMsgPrefix; var warningMessage = ""; if (branchType === 'bugfix') { warningMessage = "Dikkat! Bu branch <b>rel/env-test</b> branchinden oluşturulmalıdır"; } else if (branchType === 'hotfix') { warningMessage = "Dikkat! Bu branch <b>rel/env-hr</b> branchinden oluşturulmalıdır"; } $("#branchWarning").html(warningMessage ? '(' + warningMessage + ')' : ''); $("#branchNameText").text(branchName); $("#commitMessageText").text(commitMessageFull); $("#prMessageText").text(prMessage); $("#result-container").show(); }); $("#copyBranchName").click(function () { copyToClipboard($("#branchNameText").text()); showToast("Branch Name copied."); }); $("#copyCommitMessage").click(function () { copyToClipboard($("#commitMessageText").text()); showToast("Commit Message copied."); }); $("#copyPrMessage").click(function () { copyToClipboard($("#prMessageText").text()); showToast("PR Title copied."); }); function copyToClipboard(text) { var dummy = document.createElement("textarea"); document.body.appendChild(dummy); dummy.value = text; dummy.select(); document.execCommand("copy"); document.body.removeChild(dummy); } });  </script>
+  <script>var masterGithub="aras-digital",repoNesyAnalysis="/nesy-analysis#",repoCustomerBffGateway="/nesy-customer-bff-gateway#",repoParcelshopApi="/nesy-parcelshop-api#",repoParcelshopPwa="/nesy-parcelshop-pwa#",prodWarningMessage="Dikkat! Bu branch <b>rel/env-{COUNTRY_CODE}</b> branchinden oluşturulmalıdır",testWarningMessage="Dikkat! Bu branch <b>rel/env-test</b> branchinden oluşturulmalıdır";$(document).ready((function(){function e(e){var a=document.createElement("textarea");document.body.appendChild(a),a.value=e,a.select(),document.execCommand("copy"),document.body.removeChild(a)}$("#generateBtn").click((function(){var e=$("#commitMessage").val();if(e){var a=$("#branchType").val(),s=$("#issueNumber").val(),t=$("#branchNameOptional").val().trim();if(s||t){var r,i="xxx";t&&(i=t.toLowerCase().replace(/\s+/g,"-")),r=$("#isBffGateway").is(":checked")?a+"/bff-iss-"+(s?s+"-":"")+i:$("#isParcelshopApi").is(":checked")?a+"/parcelshop-api-iss-"+(s?s+"-":"")+i:$("#isParcelshopPwa").is(":checked")?a+"/parcelshop-pwa-iss-"+(s?s+"-":"")+i:a+"/iss-"+(s?s+"-":"")+i;var o=(s?$("#isBffGateway").is(":checked")?masterGithub+repoCustomerBffGateway+s:$("#isParcelshopApi").is(":checked")?masterGithub+repoParcelshopApi+s:$("#isParcelshopPwa").is(":checked")?masterGithub+repoParcelshopPwa+s:masterGithub+repoNesyAnalysis+s:a.toUpperCase())+" | "+e,c=s?"feat"===a?"ISS #"+s+" | PR":"bugfix"===a?"BUGFIX #"+s+" | PR":"HOTFIX #"+s+" | PR":a.toUpperCase()+" | PR",n="";"bugfix"===a?n=testWarningMessage:"hotfix"===a&&(n=prodWarningMessage),$("#branchWarning").html(n?"("+n+")":""),$("#branchNameText").text(r),$("#commitMessageText").text(o),$("#prMessageText").text(c),$("#result-container").show()}else showToast("Either Issue Number or Branch Name is required!")}else showToast("Commit Message is required!")})),$("#copyBranchName").click((function(){e($("#branchNameText").text()),showToast("Branch Name copied.")})),$("#copyCommitMessage").click((function(){e($("#commitMessageText").text()),showToast("Commit Message copied.")})),$("#copyPrMessage").click((function(){e($("#prMessageText").text()),showToast("PR Title copied.")}))}));</script>    
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
   <script type="text/javascript">
     function showToast(message) {
