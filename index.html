@@ -22,7 +22,7 @@
         <select class="form-control" id="branchType">
           <option class="dropdown-item" value="feat">rel/env-dev</option>
           <option class="dropdown-item" value="bugfix">rel/env-test</option>
-          <option class="dropdown-item" value="hotfix">rel/env-{COUNTRY_CODE}</option>
+          <option class="dropdown-item" value="hotfix">rel/env-prod</option>
         </select>
       </div>
     </div>
@@ -42,6 +42,23 @@
       <label for="commitMessage" class="col-sm-2 col-form-label">Commit Message:</label>
       <div class="col-sm-4">
         <input type="text" class="form-control" id="commitMessage" placeholder="Enter commit message">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label">Skip Quality Gate?</label>
+      <div class="col-sm-4">
+        <div class="form-check">
+          <input class="form-check-input custom-radio" checked type="radio" id="skipQualityGateYes" name="qualityGate" value="yes">
+          <label class="form-check-label" for="skipQualityGateYes">
+            Yes, I will add unit tests later.
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input custom-radio" type="radio" id="skipQualityGateNo" name="qualityGate" value="no">
+          <label class="form-check-label" for="skipQualityGateNo">
+            No, I have to add unit tests now.
+          </label>
+        </div>
       </div>
     </div>
     <div class="form-group row">
@@ -113,9 +130,9 @@
   <div id="footer">
     <span>Geliştirme talepleri veya hata bildirimi için → <a
         href="mailto:umitbeniz@araskargo.com.tr">umitbeniz@araskargo.com.tr</a></span>
-    <span id="version">v1.2.0</span>
+    <span id="version">v1.3.0</span>
   </div>
-  <script>var masterGithub="aras-digital",repoNesyAnalysis="/nesy-analysis#",repoCustomerBffGateway="/nesy-customer-bff-gateway#",repoParcelshopApi="/nesy-parcelshop-api#",repoParcelshopPwa="/nesy-parcelshop-pwa#",prodWarningMessage="Dikkat! Bu branch <b>rel/env-{COUNTRY_CODE}</b> branchinden oluşturulmalıdır",testWarningMessage="Dikkat! Bu branch <b>rel/env-test</b> branchinden oluşturulmalıdır";$(document).ready((function(){function e(e){var a=document.createElement("textarea");document.body.appendChild(a),a.value=e,a.select(),document.execCommand("copy"),document.body.removeChild(a)}$("#generateBtn").click((function(){var e=$("#commitMessage").val();if(e){var a=$("#branchType").val(),s=$("#issueNumber").val(),t=$("#branchNameOptional").val().trim();if(s||t){var r,i="xxx";t&&(i=t.toLowerCase().replace(/\s+/g,"-")),r=$("#isBffGateway").is(":checked")?a+"/bff-iss-"+(s?s+"-":"")+i:$("#isParcelshopApi").is(":checked")?a+"/parcelshop-api-iss-"+(s?s+"-":"")+i:$("#isParcelshopPwa").is(":checked")?a+"/parcelshop-pwa-iss-"+(s?s+"-":"")+i:a+"/iss-"+(s?s+"-":"")+i;var o=(s?$("#isBffGateway").is(":checked")?masterGithub+repoCustomerBffGateway+s:$("#isParcelshopApi").is(":checked")?masterGithub+repoParcelshopApi+s:$("#isParcelshopPwa").is(":checked")?masterGithub+repoParcelshopPwa+s:masterGithub+repoNesyAnalysis+s:a.toUpperCase())+" | "+e,c=s?"feat"===a?"ISS #"+s+" | PR":"bugfix"===a?"BUGFIX #"+s+" | PR":"HOTFIX #"+s+" | PR":a.toUpperCase()+" | PR",n="";"bugfix"===a?n=testWarningMessage:"hotfix"===a&&(n=prodWarningMessage),$("#branchWarning").html(n?"("+n+")":""),$("#branchNameText").text(r),$("#commitMessageText").text(o),$("#prMessageText").text(c),$("#result-container").show()}else showToast("Either Issue Number or Branch Name is required!")}else showToast("Commit Message is required!")})),$("#copyBranchName").click((function(){e($("#branchNameText").text()),showToast("Branch Name copied.")})),$("#copyCommitMessage").click((function(){e($("#commitMessageText").text()),showToast("Commit Message copied.")})),$("#copyPrMessage").click((function(){e($("#prMessageText").text()),showToast("PR Title copied.")}))}));</script>    
+  <script>var masterGithub="aras-digital",repoNesyAnalysis="/nesy-analysis#",repoCustomerBffGateway="/nesy-customer-bff-gateway#",repoParcelshopApi="/nesy-parcelshop-api#",repoParcelshopPwa="/nesy-parcelshop-pwa#",prodWarningMessage="Dikkat! Bu branch <b>rel/env-prod</b> branchinden oluşturulmalıdır",testWarningMessage="Dikkat! Bu branch <b>rel/env-test</b> branchinden oluşturulmalıdır";$(document).ready((function(){function e(e){var a=document.createElement("textarea");document.body.appendChild(a),a.value=e,a.select(),document.execCommand("copy"),document.body.removeChild(a)}$("#generateBtn").click((function(){var e=$("#commitMessage").val();if(e){var a=$("#branchType").val(),s=$("#issueNumber").val(),t=$("#branchNameOptional").val().trim();if(s||t){var r,i="xxx";t&&(i=t.toLowerCase().replace(/\s+/g,"-")),r=$("#isBffGateway").is(":checked")?a+"/bff-iss-"+($("#skipQualityGateYes").is(":checked")?"nut-":"")+(s?s+"-":"")+i:$("#isParcelshopApi").is(":checked")?a+"/parcelshop-api-iss-"+($("#skipQualityGateYes").is(":checked")?"nut-":"")+(s?s+"-":"")+i:$("#isParcelshopPwa").is(":checked")?a+"/parcelshop-pwa-iss-"+($("#skipQualityGateYes").is(":checked")?"nut-":"")+(s?s+"-":"")+i:a+"/iss-"+($("#skipQualityGateYes").is(":checked")?"nut-":"")+(s?s+"-":"")+i;;var o=(s?$("#isBffGateway").is(":checked")?masterGithub+repoCustomerBffGateway+s:$("#isParcelshopApi").is(":checked")?masterGithub+repoParcelshopApi+s:$("#isParcelshopPwa").is(":checked")?masterGithub+repoParcelshopPwa+s:masterGithub+repoNesyAnalysis+s:a.toUpperCase())+" | "+e,c=s?"feat"===a?"ISS #"+s+" | PR":"bugfix"===a?"BUGFIX #"+s+" | PR":"HOTFIX #"+s+" | PR":a.toUpperCase()+" | PR",n="";"bugfix"===a?n=testWarningMessage:"hotfix"===a&&(n=prodWarningMessage),$("#branchWarning").html(n?"("+n+")":""),$("#branchNameText").text(r),$("#commitMessageText").text(o),$("#prMessageText").text(c),$("#result-container").show()}else showToast("Either Issue Number or Branch Name is required!")}else showToast("Commit Message is required!")})),$("#copyBranchName").click((function(){e($("#branchNameText").text()),showToast("Branch Name copied.")})),$("#copyCommitMessage").click((function(){e($("#commitMessageText").text()),showToast("Commit Message copied.")})),$("#copyPrMessage").click((function(){e($("#prMessageText").text()),showToast("PR Title copied.")}))}));</script>    
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
   <script type="text/javascript">
     function showToast(message) {
