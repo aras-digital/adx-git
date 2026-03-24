@@ -1,28 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Git Automation</title>
-  <script src=https://code.jquery.com/jquery-3.6.4.min.js></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
-    <style>#result-container{display: none}.copy-button{cursor: pointer;color: #fff;border: none;border-radius: 5px}svg{height: 13px !important;width: 13px !important}.warning{color: #e74c3c;font-weight: bold;margin-left: 5px}#footer{position: fixed;bottom: 0;width: 100%;background-color: #f1f1f1;text-align: center;padding: 10px}#version{float: right;margin-right: 20px}.custom-radio{appearance: none;-webkit-appearance: none;width: 20px;height: 20px;background-color: #fff;border: 2px solid #007bff;border-radius: 4px;cursor: pointer;position: relative}.form-check-label:hover{cursor: pointer}.custom-radio:checked{background-color: #007bff;border-color: #007bff}.custom-radio:checked::before{content: '';position: absolute;top: 2px;left: 5px;width: 6px;height: 10px;border: solid white;border-width: 0 2px 2px 0;transform: rotate(45deg)}</style>
+  <style>
+    #result-container{display:none}.copy-button{cursor:pointer;color:#fff;border:none;border-radius:5px}svg{height:13px!important;width:13px!important}.warning{color:#e74c3c;font-weight:bold;margin-left:5px}#footer{position:fixed;bottom:0;width:100%;background-color:#f1f1f1;text-align:center;padding:10px}#version{float:right;margin-right:20px}.custom-radio{appearance:none;-webkit-appearance:none;width:20px;height:20px;background-color:#fff;border:2px solid #007bff;border-radius:4px;cursor:pointer;position:relative}.form-check-label:hover{cursor:pointer}.custom-radio:checked{background-color:#007bff;border-color:#007bff}.custom-radio:checked::before{content:'';position:absolute;top:2px;left:5px;width:6px;height:10px;border:solid white;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  </style>
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
-
 <body>
-
   <div class="container-fluid p-4">
-    <h1>Git Automation </h1>
+    <h1>Git Automation</h1>
     <div class="form-group row mt-4">
       <label for="branchType" class="col-sm-2 col-form-label">PR will merge to?</label>
       <div class="col-sm-4">
         <select class="form-control" id="branchType">
-          <option class="dropdown-item" value="feat">rel/env-dev</option>
-          <option class="dropdown-item" value="bugfix">rel/env-test</option>
-          <option class="dropdown-item" value="hotfix">rel/env-prod</option>
+          <option value="feat">rel/env-dev</option>
+          <option value="bugfix">rel/env-test</option>
+          <option value="hotfix">rel/env-prod</option>
         </select>
       </div>
     </div>
@@ -49,15 +48,11 @@
       <div class="col-sm-4">
         <div class="form-check">
           <input class="form-check-input custom-radio" checked type="radio" id="skipQualityGateYes" name="qualityGate" value="yes">
-          <label class="form-check-label" for="skipQualityGateYes">
-            Yes, I will add unit tests later.
-          </label>
+          <label class="form-check-label" for="skipQualityGateYes">Yes, I will add unit tests later.</label>
         </div>
         <div class="form-check">
           <input class="form-check-input custom-radio" type="radio" id="skipQualityGateNo" name="qualityGate" value="no">
-          <label class="form-check-label" for="skipQualityGateNo">
-            No, I have to add unit tests now.
-          </label>
+          <label class="form-check-label" for="skipQualityGateNo">No, I have to add unit tests now.</label>
         </div>
       </div>
     </div>
@@ -65,8 +60,12 @@
       <label class="col-sm-2 col-form-label">Issue Repository is?</label>
       <div class="col-sm-4">
         <div class="form-check">
-          <input class="form-check-input custom-radio" checked="true" type="radio" id="isNesyAnalysis" name="projectType" value="isNesyAnalysis">
+          <input class="form-check-input custom-radio" checked type="radio" id="isNesyAnalysis" name="projectType" value="isNesyAnalysis">
           <label class="form-check-label" for="isNesyAnalysis">nesy-analysis</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input custom-radio" type="radio" id="isNesyTRAnalysis" name="projectType" value="isNesyTRAnalysis">
+          <label class="form-check-label" for="isNesyTRAnalysis">nesy-TR-project-management</label>
         </div>
         <div class="form-check">
           <input class="form-check-input custom-radio" type="radio" id="isBffGateway" name="projectType" value="isBffGateway">
@@ -90,64 +89,127 @@
 
     <div class="row p-3" id="result-container">
       <div class="row">
-        <div class="col-2 col-sm-2">
-          <p><strong>Branch Name:</strong></p>
-        </div>
-        <div class="col-9 col-sm-9"><span id="branchNameText"></span> <button class="copy-button"
-            id="copyBranchName"><svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 448 512">
-              <path
-                d="M208 0H332.1c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9V336c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V48c0-26.5 21.5-48 48-48zM48 128h80v64H64V448H256V416h64v48c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V176c0-26.5 21.5-48 48-48z" />
-            </svg></button> <span class="warning" id="branchWarning"></span></div>
-
+        <div class="col-2 col-sm-2"><p><strong>Branch Name:</strong></p></div>
+        <div class="col-9 col-sm-9"><span id="branchNameText"></span> <button class="copy-button" id="copyBranchName"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M208 0H332.1c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9V336c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V48c0-26.5 21.5-48 48-48zM48 128h80v64H64V448H256V416h64v48c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V176c0-26.5 21.5-48 48-48z"/></svg></button> <span class="warning" id="branchWarning"></span></div>
         <div class="w-100 d-none d-md-block"></div>
       </div>
       <div class="row">
-        <div class="col-2 col-sm-2">
-          <p><strong>Commit Message:</strong></p>
-        </div>
-        <div class="col-9 col-sm-9"><span id="commitMessageText"></span> <button class="copy-button"
-            id="copyCommitMessage"><svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 448 512">
-              <path
-                d="M208 0H332.1c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9V336c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V48c0-26.5 21.5-48 48-48zM48 128h80v64H64V448H256V416h64v48c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V176c0-26.5 21.5-48 48-48z" />
-            </svg></button></div>
-
+        <div class="col-2 col-sm-2"><p><strong>Commit Message:</strong></p></div>
+        <div class="col-9 col-sm-9"><span id="commitMessageText"></span> <button class="copy-button" id="copyCommitMessage"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M208 0H332.1c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9V336c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V48c0-26.5 21.5-48 48-48zM48 128h80v64H64V448H256V416h64v48c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V176c0-26.5 21.5-48 48-48z"/></svg></button></div>
         <div class="w-100 d-none d-md-block"></div>
       </div>
       <div class="row">
-        <div class="col-2 col-sm-2">
-          <p><strong>PR Title:</strong></p>
-        </div>
-        <div class="col-9 col-sm-9"><span id="prMessageText"></span> <button class="copy-button" id="copyPrMessage"><svg
-              xmlns=http://www.w3.org/2000/svg viewBox="0 0 448 512">
-              <path
-                d="M208 0H332.1c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9V336c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V48c0-26.5 21.5-48 48-48zM48 128h80v64H64V448H256V416h64v48c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V176c0-26.5 21.5-48 48-48z" />
-            </svg></button></div>
-
+        <div class="col-2 col-sm-2"><p><strong>PR Title:</strong></p></div>
+        <div class="col-9 col-sm-9"><span id="prMessageText"></span> <button class="copy-button" id="copyPrMessage"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M208 0H332.1c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9V336c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V48c0-26.5 21.5-48 48-48zM48 128h80v64H64V448H256V416h64v48c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V176c0-26.5 21.5-48 48-48z"/></svg></button></div>
         <div class="w-100 d-none d-md-block"></div>
       </div>
     </div>
   </div>
+
   <div id="footer">
-    <span>Geliştirme talepleri veya hata bildirimi için → <a
-        href="mailto:umitbeniz@araskargo.com.tr">umitbeniz@araskargo.com.tr</a></span>
-    <span id="version">v1.3.0</span>
+    <span>Geliştirme talepleri veya hata bildirimi için → <a href="mailto:umitbeniz@araskargo.com.tr">umitbeniz@araskargo.com.tr</a></span>
+    <span id="version">v1.3.1</span>
   </div>
-  <script>var masterGithub="aras-digital",repoNesyAnalysis="/nesy-analysis#",repoCustomerBffGateway="/nesy-customer-bff-gateway#",repoParcelshopApi="/nesy-parcelshop-api#",repoParcelshopPwa="/nesy-parcelshop-pwa#",prodWarningMessage="Dikkat! Bu branch <b>rel/env-prod</b> branchinden oluşturulmalıdır",testWarningMessage="Dikkat! Bu branch <b>rel/env-test</b> branchinden oluşturulmalıdır";$(document).ready((function(){function e(e){var a=document.createElement("textarea");document.body.appendChild(a),a.value=e,a.select(),document.execCommand("copy"),document.body.removeChild(a)}$("#generateBtn").click((function(){var e=$("#commitMessage").val();if(e){var a=$("#branchType").val(),s=$("#issueNumber").val(),t=$("#branchNameOptional").val().trim();if(s||t){var r,i="xxx";t&&(i=t.toLowerCase().replace(/\s+/g,"-")),r=$("#isBffGateway").is(":checked")?a+"/bff-iss-"+($("#skipQualityGateYes").is(":checked")?"nut-":"")+(s?s+"-":"")+i:$("#isParcelshopApi").is(":checked")?a+"/parcelshop-api-iss-"+($("#skipQualityGateYes").is(":checked")?"nut-":"")+(s?s+"-":"")+i:$("#isParcelshopPwa").is(":checked")?a+"/parcelshop-pwa-iss-"+($("#skipQualityGateYes").is(":checked")?"nut-":"")+(s?s+"-":"")+i:a+"/iss-"+($("#skipQualityGateYes").is(":checked")?"nut-":"")+(s?s+"-":"")+i;;var o=(s?$("#isBffGateway").is(":checked")?masterGithub+repoCustomerBffGateway+s:$("#isParcelshopApi").is(":checked")?masterGithub+repoParcelshopApi+s:$("#isParcelshopPwa").is(":checked")?masterGithub+repoParcelshopPwa+s:masterGithub+repoNesyAnalysis+s:a.toUpperCase())+" | "+e,c=s?"feat"===a?"ISS #"+s+" | PR":"bugfix"===a?"BUGFIX #"+s+" | PR":"HOTFIX #"+s+" | PR":a.toUpperCase()+" | PR",n="";"bugfix"===a?n=testWarningMessage:"hotfix"===a&&(n=prodWarningMessage),$("#branchWarning").html(n?"("+n+")":""),$("#branchNameText").text(r),$("#commitMessageText").text(o),$("#prMessageText").text(c),$("#result-container").show()}else showToast("Either Issue Number or Branch Name is required!")}else showToast("Commit Message is required!")})),$("#copyBranchName").click((function(){e($("#branchNameText").text()),showToast("Branch Name copied.")})),$("#copyCommitMessage").click((function(){e($("#commitMessageText").text()),showToast("Commit Message copied.")})),$("#copyPrMessage").click((function(){e($("#prMessageText").text()),showToast("PR Title copied.")}))}));</script>    
+
+  <script>
+    var masterGithub       = "aras-digital",
+        repoNesyAnalysis   = "/nesy-analysis#",
+        repoNesyTR         = "/nesy-TR-project-management#",
+        repoCustomerBff    = "/nesy-customer-bff-gateway#",
+        repoParcelshopApi  = "/nesy-parcelshop-api#",
+        repoParcelshopPwa  = "/nesy-parcelshop-pwa#",
+        prodWarningMessage = "Dikkat! Bu branch <b>rel/env-prod</b> branchinden oluşturulmalıdır",
+        testWarningMessage = "Dikkat! Bu branch <b>rel/env-test</b> branchinden oluşturulmalıdır";
+
+    function copyText(text) {
+      var el = document.createElement("textarea");
+      document.body.appendChild(el);
+      el.value = text;
+      el.select();
+      document.execCommand("copy");
+      document.body.removeChild(el);
+    }
+
+    $(document).ready(function () {
+
+      $("#generateBtn").click(function () {
+        var commitMsg = $("#commitMessage").val();
+        if (!commitMsg) { showToast("Commit Message is required!"); return; }
+
+        var branchType   = $("#branchType").val();
+        var issueNum     = $("#issueNumber").val();
+        var optionalName = $("#branchNameOptional").val().trim();
+
+        if (!issueNum && !optionalName) { showToast("Either Issue Number or Branch Name is required!"); return; }
+
+        var slug = "xxx";
+        if (optionalName) slug = optionalName.toLowerCase().replace(/\s+/g, "-");
+
+        var skipQuality = $("#skipQualityGateYes").is(":checked") ? "nut-" : "";
+
+        // --- Branch Name ---
+        var branchName;
+        if ($("#isBffGateway").is(":checked")) {
+          branchName = branchType + "/bff-iss-" + skipQuality + (issueNum ? issueNum + "-" : "") + slug;
+        } else if ($("#isParcelshopApi").is(":checked")) {
+          branchName = branchType + "/parcelshop-api-iss-" + skipQuality + (issueNum ? issueNum + "-" : "") + slug;
+        } else if ($("#isParcelshopPwa").is(":checked")) {
+          branchName = branchType + "/parcelshop-pwa-iss-" + skipQuality + (issueNum ? issueNum + "-" : "") + slug;
+        } else {
+          // nesy-analysis ve nesy-TR-project-management aynı branch formatını kullanır
+          branchName = branchType + "/iss-" + skipQuality + (issueNum ? issueNum + "-" : "") + slug;
+        }
+
+        // --- Commit Message ---
+        var issueLink;
+        if (issueNum) {
+          if      ($("#isBffGateway").is(":checked"))    issueLink = masterGithub + repoCustomerBff   + issueNum;
+          else if ($("#isParcelshopApi").is(":checked")) issueLink = masterGithub + repoParcelshopApi + issueNum;
+          else if ($("#isParcelshopPwa").is(":checked")) issueLink = masterGithub + repoParcelshopPwa + issueNum;
+          else if ($("#isNesyTRAnalysis").is(":checked"))issueLink = masterGithub + repoNesyTR        + issueNum;
+          else                                           issueLink = masterGithub + repoNesyAnalysis  + issueNum;
+        } else {
+          issueLink = branchType.toUpperCase();
+        }
+        var commitFull = issueLink + " | " + commitMsg;
+
+        // --- PR Title ---
+        var prTitle;
+        if (issueNum) {
+          if      (branchType === "feat")   prTitle = "ISS #"    + issueNum + " | PR";
+          else if (branchType === "bugfix") prTitle = "BUGFIX #" + issueNum + " | PR";
+          else                              prTitle = "HOTFIX #" + issueNum + " | PR";
+        } else {
+          prTitle = branchType.toUpperCase() + " | PR";
+        }
+
+        // --- Warning ---
+        var warning = "";
+        if (branchType === "bugfix") warning = testWarningMessage;
+        else if (branchType === "hotfix") warning = prodWarningMessage;
+
+        $("#branchWarning").html(warning ? "(" + warning + ")" : "");
+        $("#branchNameText").text(branchName);
+        $("#commitMessageText").text(commitFull);
+        $("#prMessageText").text(prTitle);
+        $("#result-container").show();
+      });
+
+      $("#copyBranchName").click(function ()    { copyText($("#branchNameText").text());    showToast("Branch Name copied.");    });
+      $("#copyCommitMessage").click(function () { copyText($("#commitMessageText").text()); showToast("Commit Message copied."); });
+      $("#copyPrMessage").click(function ()     { copyText($("#prMessageText").text());     showToast("PR Title copied.");       });
+    });
+  </script>
+
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
   <script type="text/javascript">
     function showToast(message) {
-        Toastify({
-            text: message,
-            duration: 3000,
-            gravity: "bottom",
-            position: "left",
-            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-            close: true,
-            style: {
-              margin: "0px 0px 3% 10px",
-          }
-        }).showToast();
+      Toastify({
+        text: message, duration: 3000, gravity: "bottom", position: "left",
+        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+        close: true, style: { margin: "0px 0px 3% 10px" }
+      }).showToast();
     }
-</script>
+  </script>
 </body>
 </html>
